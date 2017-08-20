@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "node-id3": "^0.0.10",
+    "rollup": "^0.47.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
+  },
+  "devDependencies": {
+    "serve": "^6.0.2"
+  },
+  "name": "soundwall",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "sounds": "node utilities/id3tag.js public/sounds/",
+    "start": "serve public"
+  }
+}
