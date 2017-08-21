@@ -1,12 +1,14 @@
+/* global Promise */
+/* eslint-env node, mocha */
+
 const path = require('path');
 const { exec } = require('child_process');
-const { readdir, open, writeFile } = require('fs');
+const { readdir, writeFile } = require('fs');
 const { promisify } = require('util');
 const nodeID3 = require('node-id3');
 
 const readDirectory = promisify(readdir);
 const execute = promisify(exec);
-const openFile = promisify(open);
 
 const workDir = path.resolve(process.argv[2] || '.');
 const filenameRegex = /^(\d+)__(\w+)__([a-z0-9\-]+).wav$/i;
@@ -15,19 +17,19 @@ const fileWrite = promisify(writeFile);
 readDirectory(workDir).then(function (filenames) {
   return filenames.filter(function (filename) {
     return path.extname(filename).toLowerCase() == '.wav';
-  })
+  });
 }).then(function (filenames) {
   return Promise.all(filenames.map(function (filename) {
     const
       inputFilename = path.resolve(workDir, filename),
-      outputFilename = inputFilename.substr(inputFilename, inputFilename.length - 5) + '.mp3';
+      outputFilename = inputFilename.substr(inputFilename, inputFilename.length - 3) + 'mp3';
 
     console.info(`Encoding "${inputFilename}" to "${outputFilename}"...`);
 
     const command = `ffmpeg -y -i ${inputFilename} -vn -ar 44100 -ac 2 -ab 192k -f mp3 ${outputFilename}`;
     console.info(command);
 
-    return execute(command, { cwd: workDir, }).then(function (stdout, stderr) {
+    return execute(command, { cwd: workDir, }).then(function (stdout) {
       const
         matches = filenameRegex.exec(filename),
         tags = {
@@ -51,13 +53,13 @@ readDirectory(workDir).then(function (filenames) {
       tags.filename = filename;
       return tags;
     });
-  }))
+  }));
 }).then(function (tags) {
   const
     manifest = tags.reduce(function (manifest, tag) {
       manifest[tag.trackNumber] = tag;
       return manifest;
-    }, {})
+    }, {});
   return fileWrite(path.resolve(workDir, 'manifest.json'), JSON.stringify(manifest)).then(function () {
     return manifest;
   });
