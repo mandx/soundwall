@@ -1,6 +1,8 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import uglify from 'rollup-plugin-uglify';
+import rollupBabel from 'rollup-plugin-babel';
+import rollupResolve from 'rollup-plugin-node-resolve';
+import rollupEslint from 'rollup-plugin-eslint';
+import rollupCommonjs from 'rollup-plugin-commonjs';
+import rollupUglify from 'rollup-plugin-uglify';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -11,9 +13,11 @@ export default {
   dest: 'public/bundle.js',
   format: 'iife', // immediately-invoked function expression — suitable for <script> tags
   plugins: [
-    resolve(), // tells Rollup how to find date-fns in node_modules
-    commonjs(), // converts date-fns to ES modules
-    production && uglify() // minify, but only in production
+    rollupResolve({ jsnext: true }), // tells Rollup how to find date-fns in node_modules
+    rollupCommonjs(), // converts date-fns to ES modules
+    rollupEslint({ exclude: 'node_modules/**' }),
+    rollupBabel({ exclude: 'node_modules/**' }),
+    production && rollupUglify(), // minify, but only in production
   ],
-  sourceMap: true
+  sourceMap: true,
 };
