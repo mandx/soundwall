@@ -68,7 +68,7 @@ module.exports = {
     'react/jsx-no-duplicate-props': ['warn', {ignoreCase: true}],
     'react/jsx-tag-spacing': ['warn', {
       closingSlash: 'never',
-      beforeSelfClosing: 'always',
+      beforeSelfClosing: 'allow',
       afterOpening: 'allow-multiline'
     }],
     'react/forbid-prop-types': ['warn', {'forbid': ['any']}],
