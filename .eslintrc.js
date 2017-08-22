@@ -12,21 +12,24 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    // 'react-native',
+    // 'react',
     // 'plugin:import/errors',
     // 'plugin:import/warnings',
   ],
-  // plugins: [
-  //   'react',
-  //   'import',
-  // ],
-  // settings: {
-  //   react: { 'version': '16.0', },
-  //   'import/extensions': [ '.js', '.jsx', '.scss', '.css', ],
-  //   'import/resolver': {
-  //     'babel-module': {},
-  //   },
-  // },
+  plugins: [
+    'react',
+    // 'import',
+  ],
+  settings: {
+    react: {
+      version: '16.0',
+      pragma: 'h',  // Pragma to use, default to "React"
+    },
+    // 'import/extensions': [ '.js', '.jsx', '.scss', '.css', ],
+    // 'import/resolver': {
+    //   'babel-module': {},
+    // },
+  },
   env: {
     node: true,
     es6: true,
@@ -61,27 +64,29 @@ module.exports = {
     'no-mixed-spaces-and-tabs': 'error',
     'no-new-object': 'error',
     'no-useless-escape': 'off',
-
-    // 'react/jsx-no-bind': 'error',
-    // 'react/jsx-no-duplicate-props': ['warn', {ignoreCase: true}],
-    // // 'react/jsx-tag-spacing': ['warn', {
-    // //   closingSlash: 'never',
-    // //   beforeSelfClosing: 'always',
-    // //   afterOpening: 'allow-multiline'
-    // // }],
-    // 'react/forbid-prop-types': ['warn', {'forbid': ['any']}],
-    // 'react/jsx-boolean-value': 'warn',
-    // 'react/jsx-closing-bracket-location': ['warn', 'after-props'],
-    // 'react/jsx-curly-spacing': 'warn',
-    // 'react/jsx-handler-names': ['warn', {
-    //   eventHandlerPrefix: 'handle',
-    //   eventHandlerPropPrefix: 'on',
-    // }],
-    // 'react/jsx-indent-props': ['warn', 2],
-    // 'react/jsx-key': 'warn',
-    // 'react/jsx-max-props-per-line': 'off',
-    // 'react/sort-comp': 'warn',
-    // 'react/jsx-indent': ['warn', 2],
-    // 'react/jsx-first-prop-new-line': ['off', 'multiline'],
+    'react/jsx-no-bind': 'error',
+    'react/jsx-no-duplicate-props': ['warn', {ignoreCase: true}],
+    'react/jsx-tag-spacing': ['warn', {
+      closingSlash: 'never',
+      beforeSelfClosing: 'always',
+      afterOpening: 'allow-multiline'
+    }],
+    'react/forbid-prop-types': ['warn', {'forbid': ['any']}],
+    'react/jsx-boolean-value': 'warn',
+    'react/jsx-closing-bracket-location': ['warn', 'after-props'],
+    'react/jsx-curly-spacing': 'warn',
+    'react/jsx-handler-names': ['warn', {
+      eventHandlerPrefix: 'handle',
+      eventHandlerPropPrefix: 'on',
+    }],
+    'react/jsx-indent-props': ['warn', 2],
+    'react/jsx-key': 'warn',
+    'react/jsx-max-props-per-line': 'off',
+    'react/sort-comp': 'warn',
+    'react/jsx-indent': ['warn', 2],
+    'react/jsx-first-prop-new-line': ['off', 'multiline'],
+    'react/jsx-uses-react': 'error',
+    'react/jsx-uses-vars': 'error',
+    'react/react-in-jsx-scope': 'error',
   },
 };

@@ -13,10 +13,10 @@ export default {
   dest: 'public/bundle.js',
   format: 'iife', // immediately-invoked function expression — suitable for <script> tags
   plugins: [
+    rollupEslint({ exclude: 'node_modules/**' }),
+    rollupBabel({ exclude: 'node_modules/**', }),
     rollupResolve({ jsnext: true }), // tells Rollup how to find date-fns in node_modules
     rollupCommonjs(), // converts date-fns to ES modules
-    rollupEslint({ exclude: 'node_modules/**' }),
-    rollupBabel({ exclude: 'node_modules/**' }),
     production && rollupUglify(), // minify, but only in production
   ],
   sourceMap: true,
