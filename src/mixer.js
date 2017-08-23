@@ -5,8 +5,9 @@ const ContextClass = (window.AudioContext || window.webkitAudioContext || window
 
 export class Track {
 
-  constructor(url, source, gainNode) {
+  constructor(url, source, gainNode, meta) {
     this._url = url;
+    this.meta = meta;
     this.source = source;
     this.gainNode = gainNode;
   }
@@ -35,8 +36,8 @@ export class Track {
     };
   }
 
-  fromJSON(data, mixer) {
-    return mixer.addSourceFromUrl(data.url, data.volume);
+  static fromJSON(data, mixer) {
+    return mixer.addSourceFromUrl(data.url, { volume: data.volume, meta: data });
   }
 }
 
@@ -52,7 +53,7 @@ export default class Mixer {
     return [].concat(this._tracks);
   }
 
-  addSourceFromUrl(url, volume=1) {
+  addSourceFromUrl(url, { volume, meta }) {
     const
       self = this,
       { _context: context } = this;
@@ -76,12 +77,16 @@ export default class Mixer {
         source.connect(gainNode);
         // Connect the gain node to the destination.
         gainNode.connect(context.destination);
+
+        if (!(typeof volume == 'number' && volume >= 0 && volume <= 1)) {
+          volume = 1;
+        }
         gainNode.gain.value = volume;
 
         // Starts the playback of this source
         source.start(0);
 
-        const track = new Track(url, source, gainNode);
+        const track = new Track(url, source, gainNode, meta);
         self._tracks.push(track);
         return track;
       });

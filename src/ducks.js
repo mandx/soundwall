@@ -17,10 +17,7 @@ const INITIAL_STATE = {
   mixing: false,
   playOnStartup: true,
   mixerInstance: new Mixer(),
-  mix: [
-  ],
-  tracks: [
-  ],
+  tracks: [],
 };
 
 
@@ -33,9 +30,18 @@ export const TRACKS_FETCH_FINISH = 'TRACKS_FETCH_FINISH';
 export function mixTrack(track) {
   return function mixTrackAction(dispatch, getState) {
     const mixer = getState().mixerInstance;
+
+    for (let i = mixer.tracks.length - 1; i >= 0; i--) {
+      if (mixer.tracks[i].url == track.url) {
+        return Promise.resolve(track);
+      }
+    }
+
     dispatch({ type: TRACKS_MIX_START, payload: track });
-    mixer.addSourceFromUrl(track.url);
-    dispatch({ type: TRACKS_MIX_FINISH, payload: track });
+    return mixer.addSourceFromUrl(track.url, { meta: track }).then(function () {
+      dispatch({ type: TRACKS_MIX_FINISH, payload: track });
+      return track;
+    });
   };
 }
 

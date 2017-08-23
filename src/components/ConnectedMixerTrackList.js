@@ -3,9 +3,9 @@ import { connect } from 'preact-redux';
 import MixerTrackList from  './MixerTrackList';
 
 export default connect(
-  function ({ mix }) {
+  function ({ mixerInstance }) {
     return {
-      mix,
+      mix: mixerInstance.tracks.map(function (track) { return track.meta; }),
     };
   },
   function (dispatch) {
