@@ -1,0 +1,13 @@
+aside.settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.settings-form-container {
+  display: none;
+
+  &.settings-form-container-open {
+    display: block;
+  }
+}

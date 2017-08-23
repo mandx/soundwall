@@ -4,9 +4,15 @@ const ContextClass = (window.AudioContext || window.webkitAudioContext || window
 
 
 export class Track {
-  constructor(source, gainNode) {
+
+  constructor(url, source, gainNode) {
+    this._url = url;
     this.source = source;
     this.gainNode = gainNode;
+  }
+
+  get url() {
+    return this._url;
   }
 
   get volume() {
@@ -21,17 +27,35 @@ export class Track {
     this.source.disconnect(...args);
     this.gainNode.disconnect(...args);
   }
+
+  toJSON() {
+    return {
+      url: this.url,
+      volume: this.volume,
+    };
+  }
+
+  fromJSON(data, mixer) {
+    return mixer.addSourceFromUrl(data.url, data.volume);
+  }
 }
 
 
 export default class Mixer {
 
   constructor() {
-    this.context = new ContextClass();
+    this._context = new ContextClass();
+    this._tracks = [];
   }
 
-  addSourceFromUrl(url) {
-    const { context } = this;
+  get tracks() {
+    return [].concat(this._tracks);
+  }
+
+  addSourceFromUrl(url, volume=1) {
+    const
+      self = this,
+      { _context: context } = this;
 
     return fetch(url)
       .then(function (response) {
@@ -52,16 +76,24 @@ export default class Mixer {
         source.connect(gainNode);
         // Connect the gain node to the destination.
         gainNode.connect(context.destination);
-        gainNode.gain.value = 1;
+        gainNode.gain.value = volume;
 
         // Starts the playback of this source
         source.start(0);
 
-        return new Track(source, gainNode);
+        const track = new Track(url, source, gainNode);
+        self._tracks.push(track);
+        return track;
       });
   }
 
   removeTrack(track) {
-    track.disconnect(this.context);
+    this._tracks = this._tracks.filter(function (currentTrack) {
+      if (currentTrack === track) {
+        track.disconnect(this._context);
+        return false;
+      }
+      return true;
+    });
   }
 }

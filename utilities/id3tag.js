@@ -1,5 +1,6 @@
 /* global Promise */
 /* eslint-env node, mocha */
+/* eslint-disable no-console */
 
 const path = require('path');
 const { exec } = require('child_process');
@@ -27,9 +28,9 @@ readDirectory(workDir).then(function (filenames) {
     console.info(`Encoding "${inputFilename}" to "${outputFilename}"...`);
 
     const command = `ffmpeg -y -i ${inputFilename} -vn -ar 44100 -ac 2 -ab 192k -f mp3 ${outputFilename}`;
-    console.info(command);
+    console.debug(command);
 
-    return execute(command, { cwd: workDir, }).then(function (stdout) {
+    return execute(command, { cwd: workDir, }).then(function () {
       const
         matches = filenameRegex.exec(filename),
         tags = {
@@ -44,23 +45,18 @@ readDirectory(workDir).then(function (filenames) {
 
       console.info(
         `"${outputFilename}" encoded.`,
-        `Tagging with `,
+        'Tagging with ',
         `'trackNumber:${tags.trackNumber}'`,
         `'artist:${tags.artist}'`,
         `'title:${tags.title}'`);
 
       nodeID3.write(tags, outputFilename);
-      tags.filename = filename;
+      tags.url = path.basename(outputFilename);
       return tags;
     });
   }));
 }).then(function (tags) {
-  const
-    manifest = tags.reduce(function (manifest, tag) {
-      manifest[tag.trackNumber] = tag;
-      return manifest;
-    }, {});
-  return fileWrite(path.resolve(workDir, 'manifest.json'), JSON.stringify(manifest)).then(function () {
-    return manifest;
+  return fileWrite(path.resolve(workDir, 'manifest.json'), JSON.stringify(tags)).then(function () {
+    return tags;
   });
 });

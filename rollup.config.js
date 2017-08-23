@@ -8,6 +8,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
 import postcss from 'rollup-plugin-postcss';
+import nodeGlobals from 'rollup-plugin-node-globals';
+import nodeBuiltins from 'rollup-plugin-node-builtins';
 
 // PostCSS-related imports
 import cssnano from 'cssnano';
@@ -50,6 +52,8 @@ export default {
     }),
     eslint({ exclude: 'node_modules/**' }),
     babel({ exclude: 'node_modules/**', }),
+    nodeGlobals(),
+    nodeBuiltins(),
     replace({
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
     }),
