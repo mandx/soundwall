@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 
 import './styles/App.css';
 import TrackList from './components/ConnectedTrackList';
-import Mixer from './components/Mixer';
+import Mixer from './components/ConnectedMixer';
 
 
 export default class SoundWallApp extends Component {

@@ -10,9 +10,11 @@ export const BLACKLIST_KEYS = [
   'fetching',
   'mixing',
   'mixerInstance',
+  '__mixingTracks',
 ];
 
 const INITIAL_STATE = {
+  __mixingTracks: {},
   fetching: false,
   mixing: false,
   playOnStartup: true,
@@ -96,17 +98,27 @@ export default function reducer(state = INITIAL_STATE, action) {
         tracks: uniqueByKey(state.tracks.concat(action.payload), 'url'),
       };
 
-    case TRACKS_MIX_START:
+    case TRACKS_MIX_START: {
+      const __mixingTracks = {...state.__mixingTracks};
+      __mixingTracks[action.payload.url] = true;
+
       return {
         ...state,
+        __mixingTracks,
         mixing: true,
       };
+    }
 
-    case TRACKS_MIX_FINISH:
+    case TRACKS_MIX_FINISH: {
+      const __mixingTracks = {...state.__mixingTracks};
+      delete __mixingTracks[action.payload.url];
+
       return {
         ...state,
-        mixing: false,
+        __mixingTracks,
+        mixing: !!Object.keys(__mixingTracks).length,
       };
+    }
 
     default:
       return state;
