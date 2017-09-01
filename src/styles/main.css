@@ -1,37 +1,41 @@
+html {
+  height: 100%;
+}
 
 body {
   font-family: 'Lucida Grande', 'Lucida Sans Unicode', Lucida, Verdana, Ubuntu, Helvetica, Arial, sans-serif;
   color: white;
   font-weight: 300;
-
-  background-color: white;
-  background-image: url('images/carbon_fibre.png');
-  background-image: -webkit-image-set(url('images/carbon_fibre.png') 1x,url('carbon_fibre_@2X.png') 2x);
+  position: relative;
+  background: radial-gradient(ellipse at center, rgba(115,115,115,1) 0%, rgba(0,0,0,1) 100%);
 }
 
 button {
-  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Lucida, Verdana, Ubuntu, Helvetica, Arial, sans-serif;
-  color: white;
-  background: #6496c8;
-  border: none;
-  box-shadow: 0 2px #27496d;
-  transform: translateY(-1px);
-  padding: 0.25em;
+  appearance: none;
+  border: 0 none;
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  padding: 0;
 
   &:hover {
-    background-color: #417cb8;
+    olor: #555;
   }
 
-  &:active {
-    background-color: #417cb8;
-    box-shadow: 0 1px #27496d;
-    transform: translateY(1px);
+  > svg {
+    height: 75%;
+    width: 75%;
+  }
+
+  &.round {
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
   }
 }
 
-
 input[type=range] {
-  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   margin: 4.6px 0;
 
@@ -55,7 +59,7 @@ input[type=range] {
     border-radius: 50px;
     background: #ffffff;
     cursor: pointer;
-    -webkit-appearance: none;
+    appearance: none;
     margin-top: -4.6px;
   }
   &:focus::-webkit-slider-runnable-track {
@@ -121,4 +125,18 @@ input[type=range] {
   &:focus::-ms-fill-upper {
     background: #ffffff;
   }
+}
+
+
+@keyframes spinning-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+.spinning-icon {
+  animation: spinning-icon 2s infinite linear;
 }

@@ -1,0 +1,19 @@
+button {
+
+  &.round.play:not([disabled]) > svg {
+    margin-left: 10%;
+  }
+
+  &.play.round {
+    width: 10em;
+    height: 10em;
+    margin-right: 2em;
+  }
+}
+
+.mixer {
+
+  .controls {
+    text-align: right;
+  }
+}

@@ -1,23 +1,22 @@
 import { h, Component } from 'preact';
+import { autobind } from 'core-decorators';
+import MinusIcon from 'preact-icons/lib/fa/minus';
+
+import '../styles/MixerTrackListItem.css';
 
 
 export default class MixerTrackListItem extends Component {
 
-  constructor(props) {
-    super(props);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleSetVolume = this.handleSetVolume.bind(this);
-  }
-
+  @autobind
   handleRemove() {
     const { onRemove: callback, track } = this.props;
     callback(track);
   }
 
-  handleSetVolume(something) {
-    console.log(something);
+  @autobind
+  handleSetVolume({ target }) {
     const { onSetVolume: callback, track } = this.props;
-    callback(track, /* volume? */);
+    callback(track, target.value / 100);
   }
 
   render() {
@@ -26,8 +25,21 @@ export default class MixerTrackListItem extends Component {
 
     return (
       <div className="mixer-track-list-item track-list-item">
-        <dt>{track.title}</dt>
-        <dd><input type="range" onChange={this.handleSetVolume}/></dd>
+        <dt className="track-title">{track.title}</dt>
+        <dd className="track-volume">
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={track.volume * 100}
+            onChange={this.handleSetVolume}
+            title="Track volume"/>
+        </dd>
+        <dd className="track-actions">
+          <button className="round track-remove" title="Remove" onClick={this.handleRemove}>
+            <MinusIcon/>
+          </button>
+        </dd>
       </div>
     );
   }

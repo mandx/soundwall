@@ -1,15 +1,13 @@
 import { h, Component } from 'preact';
+import { autobind } from 'core-decorators';
+import PlusIcon from 'preact-icons/lib/fa/plus';
 
 import '../styles/TrackListItem.css';
 
 
 export default class TrackListItem extends Component {
 
-  constructor(props) {
-    super(props);
-    this.handleAddClick = this.handleAddClick.bind(this);
-  }
-
+  @autobind
   handleAddClick() {
     const { onAdd: callback, track } = this.props;
     callback(track);
@@ -21,8 +19,13 @@ export default class TrackListItem extends Component {
 
     return (
       <div className="track-list-item">
-        <dt>{track.title}</dt>
-        <dd><button onClick={this.handleAddClick}>Add</button></dd>
+        <dt className="track-title">{track.title}</dt>
+        <dd className="track-actions">
+          {!track.disabled &&
+            <button className="round track-add" title="Add" onClick={this.handleAddClick}>
+              <PlusIcon/>
+            </button>}
+        </dd>
       </div>
     );
   }

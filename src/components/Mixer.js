@@ -1,12 +1,14 @@
 import { h, Component } from 'preact';
-import PlayCircleIcon from 'preact-icons/lib/fa/play-circle';
+import PlayIcon from 'preact-icons/lib/fa/play';
 import RefreshIcon from 'preact-icons/lib/fa/refresh';
 
 import MixerTrackList from './ConnectedMixerTrackList';
-import SettingsLauncher from './ConnectedSettingsLauncher';
+import SettingsBox from './ConnectedSettingsBox';
+import '../styles/Mixer.css';
 
 
 export default class Mixer extends Component {
+
   render() {
     const
       { mixing } = this.props;
@@ -14,14 +16,14 @@ export default class Mixer extends Component {
     return (
       <section className="mixer">
         <section className="controls">
-          {!!mixing && <RefreshIcon/>}
-          <button title="Play">
-            <PlayCircleIcon/>
-            Play
+          <button disabled={mixing} class="round play" title="Play">
+            {mixing
+              ? <RefreshIcon className="spinning-icon"/>
+              : <PlayIcon/>}
           </button>
         </section>
+        <SettingsBox/>
         <MixerTrackList/>
-        <SettingsLauncher/>
       </section>
     );
   }

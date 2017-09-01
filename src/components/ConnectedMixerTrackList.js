@@ -1,17 +1,24 @@
 import { connect } from 'preact-redux';
 
 import MixerTrackList from  './MixerTrackList';
+import { setTrackVolume, removeTrack } from '../ducks';
+
 
 export default connect(
   function ({ mixerInstance }) {
     return {
-      mix: mixerInstance.tracks.map(function (track) { return track.meta; }),
+      mix: mixerInstance.tracks.map(function (track) {
+        return {
+          ...track.meta,
+          volume: track.volume,
+        };
+      }),
     };
   },
   function (dispatch) {
     return {
-      onRemove(track) { console.log(track); },
-      onSetVolume(track, volume) { console.log(track, volume); },
+      onRemove(track) { dispatch(removeTrack(track)); },
+      onSetVolume(track, volume) { dispatch(setTrackVolume(track, volume)); },
     };
   }
 )(MixerTrackList);

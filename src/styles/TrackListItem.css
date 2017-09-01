@@ -1,8 +1,10 @@
 .track-list-item {
-  margin: 0.5em;
+  margin: 0.5em 0;
   padding: 0.5em;
   box-shadow: 2px 2px 10px black;
   display: flex;
+  border-radius: 0.5em;
+  overflow: hidden;
 
   dt {
     flex: 1;
@@ -11,5 +13,8 @@
   dd {
     margin: 0;
   }
-}
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

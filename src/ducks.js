@@ -25,8 +25,20 @@ const INITIAL_STATE = {
 
 export const TRACKS_MIX_START = 'TRACKS_MIX_START';
 export const TRACKS_MIX_FINISH = 'TRACKS_MIX_FINISH';
+export const TRACKS_SET_VOLUME = 'TRACKS_SET_VOLUME';
+export const TRACKS_REMOVE = 'TRACKS_REMOVE';
 export const TRACKS_FETCH_START = 'TRACKS_FETCH_START';
 export const TRACKS_FETCH_FINISH = 'TRACKS_FETCH_FINISH';
+
+
+export function setTrackVolume(track, volume) {
+  return { type: TRACKS_SET_VOLUME, track, volume };
+}
+
+
+export function removeTrack(track) {
+  return { type: TRACKS_REMOVE, track };
+}
 
 
 export function mixTrack(track) {
@@ -39,9 +51,9 @@ export function mixTrack(track) {
       }
     }
 
-    dispatch({ type: TRACKS_MIX_START, payload: track });
+    dispatch({ type: TRACKS_MIX_START, track });
     return mixer.addSourceFromUrl(track.url, { meta: track }).then(function () {
-      dispatch({ type: TRACKS_MIX_FINISH, payload: track });
+      dispatch({ type: TRACKS_MIX_FINISH, track });
       return track;
     });
   };
@@ -61,7 +73,7 @@ export function loadTracks() {
           track.url = resolve('' + location, `sounds/${track.url}`);
         });
 
-        dispatch({ type: TRACKS_FETCH_FINISH, payload: tracks });
+        dispatch({ type: TRACKS_FETCH_FINISH, tracks });
         return tracks;
       });
   };
@@ -73,7 +85,7 @@ export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
 
     case REHYDRATE: {
-      const incoming = action.payload.myReducer;
+      const incoming = action.payload;
       if (incoming) {
 
         return {
@@ -95,12 +107,12 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         fetching: false,
-        tracks: uniqueByKey(state.tracks.concat(action.payload), 'url'),
+        tracks: uniqueByKey(state.tracks.concat(action.tracks), 'url'),
       };
 
     case TRACKS_MIX_START: {
       const __mixingTracks = {...state.__mixingTracks};
-      __mixingTracks[action.payload.url] = true;
+      __mixingTracks[action.track.url] = true;
 
       return {
         ...state,
@@ -111,12 +123,37 @@ export default function reducer(state = INITIAL_STATE, action) {
 
     case TRACKS_MIX_FINISH: {
       const __mixingTracks = {...state.__mixingTracks};
-      delete __mixingTracks[action.payload.url];
+      delete __mixingTracks[action.track.url];
 
       return {
         ...state,
         __mixingTracks,
         mixing: !!Object.keys(__mixingTracks).length,
+      };
+    }
+
+    case TRACKS_REMOVE: {
+      state.mixerInstance.removeTrack(action.track);
+      return {
+        ...state,
+      };
+    }
+
+    case TRACKS_SET_VOLUME: {
+      const mixer = state.mixerInstance;
+      if (action.track) {
+        const { tracks } = mixer;
+        for (let i = tracks.length - 1; i >= 0; i--) {
+          if (tracks[i].url == action.track.url) {
+            tracks[i].volume = action.volume;
+          }
+        }
+      } else {
+        mixer.volume = action.volume;
+      }
+
+      return {
+        ...state,
       };
     }
 
